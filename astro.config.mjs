@@ -7,6 +7,12 @@ export default defineConfig({
   integrations: [
     starlight({
       title: '아주대 공지사항 API',
+      locales: {
+        root: {
+          label: '한국어',
+          lang: 'ko',
+        },
+      },
       logo: {
         src: './src/assets/ajou.webp',
       },
