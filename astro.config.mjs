@@ -7,6 +7,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: '아주대 공지사항 API',
+      logo: {
+        src: './src/assets/ajou.webp',
+      },
       social: {
         github: 'https://github.com/asitisdev/ajou-notice',
       },
