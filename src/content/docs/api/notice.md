@@ -28,7 +28,7 @@ description: 아주대학교 공지사항 API 문서입니다
 
 데이터베이스에 저장된 공지사항의 JSON 배열을 반환합니다.
 
-- `id` (integer): 공지사항의 고유 ID
+- `id` (integer): 공지사항의 게시글 번호
 - `category` (string): 공지사항의 카테고리
 - `department` (string): 공지사항을 게시한 부서
 - `title` (string): 공지사항의 제목
@@ -88,7 +88,7 @@ GET /api/notices?page=1&category=비교과&search=대회
 
 | 컬럼         | 타입    | 설명                                         |
 | ------------ | ------- | -------------------------------------------- |
-| `id`         | Integer | 공지사항 번호                                |
+| `id`         | Integer | 공지사항 게시글 번호                         |
 | `category`   | Text    | 공지사항 분류 (예: 학사, 장학, 비교과, 기타) |
 | `department` | Text    | 공지 부서                                    |
 | `title`      | Text    | 공지사항 제목                                |
