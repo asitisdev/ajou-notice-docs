@@ -1,0 +1,79 @@
+---
+title: 공지사항 API
+description: 아주대학교 공지사항 API 문서입니다
+---
+
+import { Code } from '@astrojs/starlight/components';
+export const example = await fetch('https://ajou-notice.asitis.workers.dev/api/notices?category=비교과&search=대회')
+  .then((response) => response.json())
+  .then((data) => JSON.stringify(data, null, 2))
+  .catch((error) => 'API 요청에 실패했습니다.');
+
+아주대학교 공지사항 API를 설명하는 문서입니다.
+
+아주대학교 공지사항 API는 평일 오전 09시부터 오후 19시까지는 5분 간격으로 학교 홈페이지에서 공지사항을 받아와 데이터베이스가 업데이트되며, 이외 시간대에는 30분에 한번씩 업데이트가 진행됩니다. 주말에는 업데이트가 이루어지지 않습니다.
+
+## 엔드포인트
+
+아주대학교 공지사항 API는 현재 `ajou-notice.asitis.workers.dev`를 통해 접근할 수 있습니다
+
+## `GET` /api/notices
+
+데이터베이스에서 공지사항 목록을 페이지네이션(10개 단위)으로 가져옵니다. 분류, 공지부서 및 검색어로 필터링할 수 있습니다.
+
+### 쿼리 파라미터
+
+- `page` (선택, integer): 페이지 번호, 기본값은 1입니다.
+- `category` (선택, string): 해당 카테고리로 공지사항을 필터링합니다.
+- `department` (선택, string): 해당 부서로 공지사항을 필터링합니다.
+- `search` (선택, string): 제목 또는 내용에 해당 검색어가 포함된 공지사항을 검색합니다.
+
+### 응답
+
+#### 200 - OK
+
+데이터베이스에 저장된 공지사항의 JSON 배열을 반환합니다.
+
+- `id` (integer): 공지사항의 게시글 번호
+- `category` (string): 공지사항의 카테고리
+- `department` (string): 공지사항을 게시한 부서
+- `title` (string): 공지사항의 제목
+- `content` (string): 공지사항의 내용
+- `summary` (string): 공지사항 내용의 AI 3줄 요약
+- `url` (string): 공지사항의 링크
+- `date` (string): 공지사항이 게시된 날짜
+
+#### 405 - Method Not Allowed
+
+요청 메서드가 `GET`이 아닌 경우.
+
+### 요청 예시
+
+```
+GET /api/notices?page=1&category=비교과&search=대회
+```
+
+### 응답 예시
+
+<Code code={example} lang="json" client:load />
+
+## 데이터베이스 구조
+
+아주대 공지사항 API 데이터베이스의 구조입니다.
+
+### notices 테이블
+
+| 컬럼         | 타입    | 설명                                          |
+| ------------ | ------- | --------------------------------------------- |
+| `id`         | Integer | 공지사항 게시글 번호                          |
+| `category`   | Text    | 공지사항 분류 (예: 학사, 장학, 비교과, 기타)  |
+| `department` | Text    | 공지 부서 (예: 교무팀, 기획팀, 학생지원팀 등) |
+| `title`      | Text    | 공지사항 제목                                 |
+| `content`    | Text    | 공지사항 내용                                 |
+| `summary`    | Text    | 공지사항 내용 AI 3줄 요약                     |
+| `url`        | Text    | 공지사항 링크                                 |
+| `date`       | Text    | 공지사항 작성일                               |
+
+### 추가 정보
+
+아주대학교 공지사항 API는 Cloudflare Workers와 Cloudflare D1을 사용하여 운영되고 있습니다. 더 많은 내용이나 상세한 구현에 관한 부분은 [GitHub](https://github.com/asitisdev/ajou-notice)를 참고해주세요.
