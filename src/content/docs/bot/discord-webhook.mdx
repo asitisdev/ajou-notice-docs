@@ -1,5 +1,5 @@
 ---
-title: 디스코드 웹훅
+title: 디스코드 웹훅 알림봇
 description: 디스코드 웹훅 알림봇 문서입니다
 ---
 
@@ -23,7 +23,7 @@ import DiscordBotForm from '../../../components/DiscordBotForm.astro';
 
 알림봇 연동을 해제하고 싶으실 경우에는 `웹후크 삭제하기`를 누르기 전에 꼭 먼저 사이트에서 등록을 해제해주신 후에 삭제를 해주세요.
 
-## 웹훅 알림봇 등록하기
+## 디스코드 웹훅 알림봇 등록하기
 
 아래 입력폼을 통해 디스코드 웹훅 URL을 등록하여 알림을 받아보세요.
 
@@ -31,7 +31,86 @@ import DiscordBotForm from '../../../components/DiscordBotForm.astro';
 
 ## 디스코드 웹훅 알림봇 API
 
-디스코드 웹훅 알림봇의 API에 대해 설명합니다. API에 직접 접근하지 않고도 [웹훅 알림봇 등록하기](#웹훅-알림봇-등록하기)를 이용해서 사용해보실 수 있습니다.
+디스코드 웹훅 알림봇의 API는 현재 `ajou-notice.asitis.workers.dev`를 통해 접근할 수 있습니다.
+
+디스코드 웹훅 알림봇을 사용하시려면, API에 직접 접근하지 않고도 [웹훅 알림봇 등록하기](#웹훅-알림봇-등록하기)를 이용해서 직접 사용해보실 수 있습니다.
+
+아래는 각 API 엔드포인트와 사용 예시입니다.
+
+### 엔드포인트
+
+- `GET /api/webhook`: 웹훅 정보를 조회합니다.
+- `POST /api/webhook`: 새로운 웹훅을 등록합니다.
+- `DELETE /api/webhook`: 기존 웹훅을 삭제합니다.
+
+### 요청 및 응답 형식
+
+#### `GET` /api/webhook
+
+웹훅 정보를 조회합니다.
+
+**요청 파라미터:**
+
+- `webhook` (필수, string): 조회할 웹훅 URL
+
+**응답 예시:**
+
+```json
+{
+  "webhook": "YOUR_WEBHOOK_URL",
+  "latestId": 334899,
+  "queryParams": "category=비교과&search=대회"
+}
+```
+
+#### `POST` /api/webhook
+
+새로운 웹훅을 등록합니다.
+
+**요청 파라미터:**
+
+- `webhook` (필수, string): 등록할 웹훅 URL
+- `category` (선택, string): 공지사항 분류
+- `department` (선택, string): 공지 부서
+- `search` (선택, string): 검색 키워드
+
+**요청 예시:**
+
+```json
+{
+  "webhook": "YOUR_WEBHOOK_URL",
+  "category": "비교과",
+  "department": "학생지원팀",
+  "search": "대회"
+}
+```
+
+**응답 예시:**
+
+- 등록 성공: `200 OK` - Webhook registered successfully
+- 등록 실패 (중복된 웹훅 URL): `409 Conflict` - Duplicate entry for unique field
+
+#### `DELETE` /api/webhook
+
+기존 웹훅을 삭제합니다.
+
+**요청 파라미터:**
+
+- `webhook` (필수, string): 삭제할 웹훅 URL
+
+**응답 예시:**
+
+- 삭제 성공: `200 OK` - Webhook deleted successfully
+- 삭제 실패 (웹훅 URL 없음): `404 Not Found` - Webhook not found
+
+### 에러 처리
+
+API 호출 시 발생할 수 있는 에러와 그에 대한 처리 방법은 다음과 같습니다:
+
+- `400 Bad Request`: 요청에 필요한 파라미터가 누락된 경우 발생합니다. 요청을 다시 확인해주세요.
+- `404 Not Found`: 요청한 웹훅 URL이 존재하지 않는 경우 발생합니다. 웹훅 URL을 다시 확인해주세요.
+- `409 Conflict`: 중복된 웹훅 URL을 등록하려는 경우 발생합니다. 다른 웹훅 URL을 사용해주세요.
+- `500 Internal Server Error`: 서버 내부 오류가 발생한 경우입니다. 잠시 후 다시 시도해주세요.
 
 ## 추가 정보
 
